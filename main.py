@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import time
 
-
+#Paths
 new_render_path = "F:/FTP/tauans-remote-render/new-render-jobs/"
 finished_render_jobs_path = "F:/FTP/tauans-remote-render/finished-render-jobs/"
 blender_path = "C:/Program Files/Blender Foundation/Blender 3.0/"
@@ -13,7 +13,7 @@ processed_path = "F:/FTP/tauans-remote-render/processed-jobs/"
 path_to_log = "F:/FTP/tauans-remote-render/logs/"
 
 
-def new_job_in_path():
+def new_job_in_path():#Check if new file is present
     dir_content = os.listdir(new_render_path)
     files_in_path = len(dir_content)
     if files_in_path > 0:
@@ -21,21 +21,21 @@ def new_job_in_path():
     else:
         return False
 
-def move_file_to_processed():
+def move_file_to_processed():#Moves file to processed folder
     shutil.move(name_and_path_of_file, processed_path+name_of_file)
 
-def rename_file_in_process_folder():
+def rename_file_in_process_folder():#Renames file to make it unique.
     os.rename(processed_path+name_of_file, processed_path+str(secrets.token_hex(15))+name_of_file)
 
-def get_name_of_file():
+def get_name_of_file():#Gets name of file.
     dir_content = os.listdir(new_render_path)
     file_name = dir_content[0]
     return file_name
 
-def get_time():
+def get_time():#Gets current time
     return str(time.strftime("%Y-%m-%d-%H-%M"))
 
-def new_blender_job():
+def new_blender_job():#Exectues blender with command
     print("New job found!")
     blender_command = f"blender.exe -b {name_and_path_of_file} -o {finished_render_jobs_path}render_{get_time()} -F PNG -f -1"
     print(blender_command)
@@ -46,7 +46,6 @@ def new_blender_job():
     #subprocess.run(full_command)
 
 while True:
-    error = False
     try:
         print("Waiting for a new job...")
         if new_job_in_path():
@@ -62,5 +61,4 @@ while True:
         sleep(5)
     except Exception as E:
         print(E)
-        error = True
         sleep(10)
